@@ -47,7 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Book',
     'bootstrap5',
-    'cloudinary'
+    'cloudinary',
+    'django_filters',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -79,6 +81,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'PickBook.wsgi.application'
 
