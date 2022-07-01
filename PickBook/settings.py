@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import cloudinary
+import cloudinary.api
+import cloudinary.uploader
+from decouple import config,Csv
+import dj_database_url
+import cloudinary, cloudinary.api,cloudinary.uploader
+import os
+import django_on_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Book',
+    'cloudinary',
+    'bootstrap5'
 ]
 
 MIDDLEWARE = [
@@ -117,7 +127,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static/'),
+]
 
+cloudinary.config(
+    cloud_name='hanancodes',
+    api_key='818526811121834',
+    api_secret='gHgIrS1Pf1zJ2yFIqYyycWoWYe4'
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
