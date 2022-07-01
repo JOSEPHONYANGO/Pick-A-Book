@@ -49,7 +49,7 @@ class Books(models.Model):
         Category, related_name="filter", on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return self.name
+        return self.title
 
     @classmethod
     def save_books(cls, books):

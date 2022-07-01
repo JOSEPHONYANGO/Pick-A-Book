@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'Book',
     'bootstrap5',
     'cloudinary',
+    'django_filters',
+    'rest_framework'
     'corsheaders',
 ]
 
@@ -82,6 +84,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'PickBook.wsgi.application'
 
