@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'cloudinary',
     'django_filters',
-    'rest_framework'
+    'rest_framework',
     'corsheaders',
 ]
 

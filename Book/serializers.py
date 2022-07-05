@@ -12,4 +12,13 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model=Books
         fields = '__all__'
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['name','email','password']
+        extra_kwargs = {
+            'password':{'write_only':True}
+        }
+
         

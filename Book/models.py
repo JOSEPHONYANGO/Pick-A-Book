@@ -78,6 +78,11 @@ class Profile(models.Model):
         User, related_name="users", on_delete=models.CASCADE)
     books = models.ForeignKey(
         Books, related_name="books", on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=60,null=True)
+    email = models.EmailField(max_length=50,null=True)
+    password = models.CharField(max_length=50,null=True)
+
+
 
     def __str__(self) -> str:
         return self.user.username
