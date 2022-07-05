@@ -1,3 +1,5 @@
+from contextlib import nullcontext
+from unicodedata import name
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
@@ -44,7 +46,7 @@ class Books(models.Model):
     date_posted = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
         User, related_name="sellers", on_delete=models.CASCADE)
-    book_image = CloudinaryField("book_image")
+    book_image = CloudinaryField("book_image",null=True,blank=True)
     category = models.ForeignKey(
         Category, related_name="filter", on_delete=models.CASCADE)
 
