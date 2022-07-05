@@ -16,7 +16,7 @@ class BookSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['name','email','password']
+        fields = ['id','name','email','password']
         extra_kwargs = {
             'password':{'write_only':True}
         }

@@ -1,5 +1,5 @@
 from unicodedata import category
-from .models import Books
+from .models import Books,User
 from .serializers import BookSerializer,ProfileSerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -18,7 +18,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 # Create your views here.
 
-key = 'my_secret'
+# key = 'my_secret'
 
 @api_view(['GET', 'POST'])
 def all_books(request):
@@ -57,5 +57,16 @@ class LoginView(APIView):
 
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect Password') 
-        return Response()             
+        
+
+        payload = {
+            'id':user.id,
+            'exp':datetime.datetime.utcnow()+ datetime.timedelta(minutes=30),
+            'iat':datetime.datetime.utcnow()
+
+        }
+
+        return Response({
+            'message':'success'
+        })             
 
