@@ -40,11 +40,9 @@ class create_books(APIView):
 
         if request.method == 'POST':
             serializer = PostBookSerializer(data=request.data)
-            print(">>>>>>>>>>>>", serializer)
 
             if serializer.is_valid():
                 serializer.save()
-                response_dict = {}
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -71,3 +69,4 @@ class all_categories(APIView):
             serializer = CategorySerializer(category, many=True)
 
             return Response(serializer.data)
+

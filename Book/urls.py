@@ -8,5 +8,4 @@ urlpatterns=[
     path('all_categories/',views.all_categories.as_view(),name='allcategories'),
 
 
-
 ]
