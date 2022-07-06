@@ -1,6 +1,6 @@
 from unicodedata import category
-from .models import Books,User
-from .serializers import BookSerializer,ProfileSerializer
+from .models import Books, Category
+from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -11,91 +11,63 @@ from rest_framework import generics
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
-import jwt
-from datetime import datetime
+from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import IsAuthenticated
+
 
 # Create your views here.
 
-# key = 'my_secret'
+class all_books(APIView):
+    permission_classes = (IsAuthenticated, )
 
-@api_view(['GET', 'POST'])
-def all_books(request):
-    if request.method == 'GET':
-        if 'category' in request.GET and request.GET['category']:
-            category = request.GET['category']
-            books = Books.objects.filter(category__name=category)
-        else:
-            books=Books.objects.all()
+    def get(self, request):
+        if request.method == 'GET':
+            if 'category' in request.GET and request.GET['category']:
+                category = request.GET['category']
+                books = Books.objects.filter(category__name=category)
+            else:
+                books = Books.objects.all()
 
-        serializer=BookSerializer(books, many=True)
-        return Response(serializer.data)
-
-# def login(request,key,data):
-#     exp=int(datetime.now().timestamp()+45)
-#     jwt_token=jwt.encode({'user':{'name':'Joseph','role':'user'},'exp':exp},"my_secret",algorithm=['HS256'])
-#     request.session['jwt_key'] = jwt_token
-#     return HttpResponse(f"The session Key:{key}, Session Data:{jwt_token}")
+            serializer = BookSerializer(books, many=True)
+            return Response(serializer.data)
 
 
-# class RegisterView(APIView):
-#     def post(self,request):
-#         serializer = ProfileSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response(serializer.data)
+class create_books(APIView):
+    permission_classes = (IsAuthenticated, )
 
-# class LoginView(APIView):
-#     def post(self,request):
-#         email = request.data['email'] 
-#         password = request.data['password'] 
+    def post(self, request):
 
-#         user = user.objects.filter(email=email).first()
-#         if user is None:
-#             raise AuthenticationFailed('User not found')
+        if request.method == 'POST':
+            serializer = PostBookSerializer(data=request.data)
+            print(">>>>>>>>>>>>", serializer)
 
-#         if not user.check_password(password):
-#             raise AuthenticationFailed('Incorrect Password') 
-        
+            if serializer.is_valid():
+                serializer.save()
+                response_dict = {}
 
-#         payload = {
-#             'id':user.id,
-#             'exp':datetime.datetime.utcnow()+ datetime.timedelta(minutes=30),
-#             'iat':datetime.datetime.utcnow()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-#         }
 
-#         token = jwt.encode(payload,'secret',algorithm='H256').decode('utf-8')
+class all_users(APIView):
+    permission_classes = (IsAuthenticated, )
 
-#         response = Response()
+    def get(self, request):
+        if request.method == 'GET':
+            users = User.objects.all()
 
-#         response.set_cookie(key='jwt',value='token',httponly=True)
+            serializer = UserSerializer(users, many=True)
 
-#         return Response({
-#             'jwt':token
-#         }) 
+            return Response(serializer.data)
 
-#         class UserView(APIView):
-#             def get(self,request):
-#                 token = request.COOKIES.get('jwt')
 
-#                 return Response(token)
-#                 if not token:
-#                     raise AuthenticationFailed('Unauthenticated')  
-#                 try:
-#                     payload = jwt.decode(token,'secret',algorithm=['H256'])
+class all_categories(APIView):
+    permission_classes = (IsAuthenticated, )
 
-#                 except jwt.ExpiredSignatureError:
-#                     raise AuthenticationFailed('Unauthenticated!')  
-#                 return Response(token) 
+    def get(self, request):
+        if request.method == 'GET':
+            category = Category.objects.all()
 
-#                 user = User.objects.filter(id=payload[id]).first() 
-#                 serializer = UserSerializer(user) 
+            serializer = CategorySerializer(category, many=True)
 
-#                 return Response (serializer.data)
-
-# class LogoutView(APIView):
-#     def post(self,request): 
-#     response = Response()                                
-
+            return Response(serializer.data)
