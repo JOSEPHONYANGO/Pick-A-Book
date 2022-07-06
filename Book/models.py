@@ -145,6 +145,6 @@ class Cart(models.Model):
 class Payment(models.Model):
     user = models.ForeignKey(
         User, related_name='user_payment', on_delete=models.CASCADE)
-    amount_no = models.IntegerField(null=True, blank=True)
+    amount_no = models.IntegerField()
     order = models.OneToOneField(
-        Orders, related_name='payment_order', on_delete=models.CASCADE)
+        Orders, related_name='payment_order', on_delete=models.CASCADE,null=True,blank=True)

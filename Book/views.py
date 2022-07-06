@@ -1,5 +1,8 @@
+from cmath import log
 from unicodedata import category
-from .models import Books, Category
+
+from Book.Mpesa import *
+from .models import Books, Category, Payment
 from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -14,6 +17,8 @@ from django.contrib.auth.models import User
 from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from urllib import request, response
+import time
 
 
 # Create your views here.
@@ -70,3 +75,54 @@ class all_categories(APIView):
 
             return Response(serializer.data)
 
+
+class BookPayment(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def post(Self, request):
+        if request.method == 'POST':
+            m_time = mpesa_time()
+            p_key = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+            m_pass = mpesa_password("174379", p_key, m_time)
+            token = mpesa_token()
+            body = request.body
+
+            body = json.loads(body)
+            phone = body['phone']
+            amount = body['amount']
+
+            res = stk_push(phone, amount, m_pass,
+                           m_time, token['access_token'])
+            transaction_id = res['CheckoutRequestID']
+            
+            time.sleep(13)
+
+            que = stk_Query(res['CheckoutRequestID'], m_pass,
+                            m_time, token['access_token'])
+            print(que)
+            print(transaction_id)
+
+            if(que['ResultCode']=='0'):
+                payment=Payment(user=request.user,amount_no=amount)
+                payment.save()
+
+                return Response({'status': True, 'payload': que}, status.HTTP_200_OK)
+            else:
+                return Response({'status': False, 'payload': que}, status.HTTP_400_BAD_REQUEST)
+
+class stkQuery(APIView):
+    def stkQuery(request):
+        if request.method == 'POST':
+            m_time = mpesa_time()
+            p_key = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+            m_pass = mpesa_password("174379", p_key, m_time)
+            token = mpesa_token()
+
+            body = request.body
+            body = json.loads(body)
+            transaction_id = body['id']
+            print(transaction_id)
+            res = stk_Query(transaction_id, m_pass,
+                            m_time, token['access_token'])
+            print(res)
+            return Response({'status': True, 'payload': res}, status.HTTP_200_OK)
