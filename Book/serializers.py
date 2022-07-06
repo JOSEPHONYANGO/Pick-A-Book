@@ -1,6 +1,6 @@
 from dataclasses import fields
 from rest_framework import serializers
-from .models import Books,Profile, Category
+from .models import Books,Profile, Category,Cart
 from django.contrib.auth.models import User
 
 
@@ -12,14 +12,6 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model=Books
         fields = '__all__'
-
-# class ProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Profile
-#         fields = ['id','name','email','password']
-#         extra_kwargs = {
-#             'password':{'write_only':True}
-#         }
 
         
 class PostBookSerializer(serializers.ModelSerializer):
@@ -40,3 +32,9 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model=Category
         fields = '__all__'
+
+class CartSerializer(serializers.ModelSerializer):
+    books = BookSerializer(read_only=True,many=True)
+    class Meta:
+        model = Cart
+        fields = '__all__'       

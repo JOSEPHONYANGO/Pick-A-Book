@@ -141,10 +141,18 @@ class Delivery(models.Model):
 
 
 class Cart(models.Model):
+    cart_id = models.OneToOneField(User,on_delete=models.CASCADE,null=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
     book = models.ForeignKey(
         Books, related_name='cart_books', on_delete=models.CASCADE)
     user = models.ForeignKey(
         User, related_name='cart_user', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['cart_id','created_at']
+
+    def __str__(self):
+        return f'{self.cart_id}'        
 
 
 class Payment(models.Model):
