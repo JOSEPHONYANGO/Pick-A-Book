@@ -72,14 +72,14 @@ class all_categories(APIView):
 
             return Response(serializer.data)
 
-class Cart (APIView):
+class CartView (APIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         if request.method == 'GET':
-            category = Cart.objects.all()
+            cart = Cart.objects.all()
 
-            serializer = CartSerializer(Cart, many=True)
+            serializer = CartSerializer(cart, many=True)
 
             return Response(serializer.data)
 
