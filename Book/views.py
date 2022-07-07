@@ -1,4 +1,8 @@
+from collections import UserString
+from pickle import NONE
 from unicodedata import category
+
+from django.conf import UserSettingsHolder
 from .models import Books, Category
 from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer
 from django.shortcuts import render, redirect
@@ -71,3 +75,18 @@ class all_categories(APIView):
             serializer = CategorySerializer(category, many=True)
 
             return Response(serializer.data)
+ 
+
+class User(APIView):
+    def get(self,request,userid,format=None):
+        users = UserString.object.all().filter(users=userid)
+        serializer = UserSerializer(users,many=True)
+        return Response({"status":"Ok","data":serializer.data},status.HTTP_200_OK)
+    
+    def post(self,request,format=None,):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status":"Ok","data":serializer.data},status.HTTP_200_OK)
+        else:
+            return Response({"status":False,"data":serializer.errors},status.HTTP_400_BAD_REQUEST)
