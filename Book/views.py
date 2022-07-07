@@ -1,9 +1,19 @@
+<<<<<<< HEAD
+from collections import UserString
+from pickle import NONE
+from unicodedata import category
+
+from django.conf import UserSettingsHolder
+from .models import Books, Category
+from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer
+=======
 from cmath import log
 from unicodedata import category
 
 from Book.Mpesa import *
 from .models import Books, Category, Payment
 from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer,RegisterSerializer
+>>>>>>> 2a10442b474e666e857a4d98252d1e02fb091b76
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -72,6 +82,24 @@ class all_categories(APIView):
 
         serializer = CategorySerializer(category, many=True)
 
+<<<<<<< HEAD
+            return Response(serializer.data)
+ 
+
+class User(APIView):
+    def get(self,request,userid,format=None):
+        users = UserString.object.all().filter(users=userid)
+        serializer = UserSerializer(users,many=True)
+        return Response({"status":"Ok","data":serializer.data},status.HTTP_200_OK)
+    
+    def post(self,request,format=None,):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status":"Ok","data":serializer.data},status.HTTP_200_OK)
+        else:
+            return Response({"status":False,"data":serializer.errors},status.HTTP_400_BAD_REQUEST)
+=======
         return Response(serializer.data)
 
 
@@ -112,3 +140,4 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
+>>>>>>> 2a10442b474e666e857a4d98252d1e02fb091b76
