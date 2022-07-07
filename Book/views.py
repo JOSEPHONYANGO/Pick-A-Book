@@ -118,23 +118,24 @@ class BookPayment(APIView):
         amount = body['amount']
 
         res = stk_push(phone, amount, m_pass,m_time, token['access_token'])
-        transaction_id = res['CheckoutRequestID']
+      
+        return Response({'status': False, 'payload': res}, status.HTTP_400_BAD_REQUEST)
 
-        time.sleep(13)
+class stkQuery(APIView):
+    def post(self,request):
+        m_time = mpesa_time()
+        p_key = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+        m_pass = mpesa_password("174379", p_key, m_time)
+        token = mpesa_token()
 
-        que = stk_Query(res['CheckoutRequestID'], m_pass,
-                            m_time, token['access_token'])
-        print(que)
+        body = request.body
+        body = json.loads(body)
+        transaction_id = body['id']
         print(transaction_id)
-
-        if(que['ResultCode'] == '0'):
-            payment = Payment(user=request.user, amount_no=amount)
-            payment.save()
-
-            return Response({'status': True, 'payload': que}, status.HTTP_200_OK)
-        else:
-            return Response({'status': False, 'payload': que}, status.HTTP_400_BAD_REQUEST)
-
+        res = stk_Query(transaction_id, m_pass,
+                            m_time, token['access_token'])
+        print(res)
+        return Response({'status': True, 'payload': res}, status.HTTP_200_OK)
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()

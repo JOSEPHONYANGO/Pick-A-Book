@@ -15,6 +15,8 @@ urlpatterns=[
 =======
     path('payment/',views.BookPayment.as_view(),name='payment'),
     path('register_user/',views.RegisterView.as_view(),name='register'),
+    path('query/',views.stkQuery.as_view(),name='register'),
+
     path('', schema_view)
 
 
