@@ -1,19 +1,9 @@
-<<<<<<< HEAD
-from collections import UserString
-from pickle import NONE
-from unicodedata import category
-
-from django.conf import UserSettingsHolder
-from .models import Books, Category
-from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer
-=======
 from cmath import log
 from unicodedata import category
 
 from Book.Mpesa import *
 from .models import Books, Category, Payment
 from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer,RegisterSerializer
->>>>>>> 2a10442b474e666e857a4d98252d1e02fb091b76
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -82,24 +72,6 @@ class all_categories(APIView):
 
         serializer = CategorySerializer(category, many=True)
 
-<<<<<<< HEAD
-            return Response(serializer.data)
- 
-
-class User(APIView):
-    def get(self,request,userid,format=None):
-        users = UserString.object.all().filter(users=userid)
-        serializer = UserSerializer(users,many=True)
-        return Response({"status":"Ok","data":serializer.data},status.HTTP_200_OK)
-    
-    def post(self,request,format=None,):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"status":"Ok","data":serializer.data},status.HTTP_200_OK)
-        else:
-            return Response({"status":False,"data":serializer.errors},status.HTTP_400_BAD_REQUEST)
-=======
         return Response(serializer.data)
 
 
@@ -118,26 +90,26 @@ class BookPayment(APIView):
         amount = body['amount']
 
         res = stk_push(phone, amount, m_pass,m_time, token['access_token'])
-        transaction_id = res['CheckoutRequestID']
+      
+        return Response({'status': False, 'payload': res}, status.HTTP_400_BAD_REQUEST)
 
-        time.sleep(13)
+class stkQuery(APIView):
+    def post(self,request):
+        m_time = mpesa_time()
+        p_key = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+        m_pass = mpesa_password("174379", p_key, m_time)
+        token = mpesa_token()
 
-        que = stk_Query(res['CheckoutRequestID'], m_pass,
-                            m_time, token['access_token'])
-        print(que)
+        body = request.body
+        body = json.loads(body)
+        transaction_id = body['id']
         print(transaction_id)
-
-        if(que['ResultCode'] == '0'):
-            payment = Payment(user=request.user, amount_no=amount)
-            payment.save()
-
-            return Response({'status': True, 'payload': que}, status.HTTP_200_OK)
-        else:
-            return Response({'status': False, 'payload': que}, status.HTTP_400_BAD_REQUEST)
-
+        res = stk_Query(transaction_id, m_pass,
+                            m_time, token['access_token'])
+        print(res)
+        return Response({'status': True, 'payload': res}, status.HTTP_200_OK)
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
->>>>>>> 2a10442b474e666e857a4d98252d1e02fb091b76
