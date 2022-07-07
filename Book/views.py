@@ -3,7 +3,7 @@ from unicodedata import category
 
 from Book.Mpesa import *
 from .models import Books, Category, Payment
-from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer
+from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer,RegisterSerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -16,10 +16,12 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from urllib import request, response
+from rest_framework import generics
 import time
-
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 # Create your views here.
 
@@ -43,86 +45,70 @@ class create_books(APIView):
 
     def post(self, request):
 
-        if request.method == 'POST':
-            serializer = PostBookSerializer(data=request.data)
+        serializer = PostBookSerializer(data=request.data)
 
-            if serializer.is_valid():
-                serializer.save()
+        if serializer.is_valid():
+            serializer.save()
 
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class all_users(APIView):
-    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
-        if request.method == 'GET':
-            users = User.objects.all()
+        users = User.objects.all()
 
-            serializer = UserSerializer(users, many=True)
+        serializer = UserSerializer(users, many=True)
 
-            return Response(serializer.data)
+        return Response(serializer.data)
+  
 
 
 class all_categories(APIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request):
-        if request.method == 'GET':
-            category = Category.objects.all()
+        category = Category.objects.all()
 
-            serializer = CategorySerializer(category, many=True)
+        serializer = CategorySerializer(category, many=True)
 
-            return Response(serializer.data)
+        return Response(serializer.data)
 
 
 class BookPayment(APIView):
     permission_classes = (IsAuthenticated, )
 
     def post(Self, request):
-        if request.method == 'POST':
-            m_time = mpesa_time()
-            p_key = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
-            m_pass = mpesa_password("174379", p_key, m_time)
-            token = mpesa_token()
-            body = request.body
+        m_time = mpesa_time()
+        p_key = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+        m_pass = mpesa_password("174379", p_key, m_time)
+        token = mpesa_token()
+        body = request.body
 
-            body = json.loads(body)
-            phone = body['phone']
-            amount = body['amount']
+        body = json.loads(body)
+        phone = body['phone']
+        amount = body['amount']
 
-            res = stk_push(phone, amount, m_pass,
-                           m_time, token['access_token'])
-            transaction_id = res['CheckoutRequestID']
-            
-            time.sleep(13)
+        res = stk_push(phone, amount, m_pass,m_time, token['access_token'])
+        transaction_id = res['CheckoutRequestID']
 
-            que = stk_Query(res['CheckoutRequestID'], m_pass,
+        time.sleep(13)
+
+        que = stk_Query(res['CheckoutRequestID'], m_pass,
                             m_time, token['access_token'])
-            print(que)
-            print(transaction_id)
+        print(que)
+        print(transaction_id)
 
-            if(que['ResultCode']=='0'):
-                payment=Payment(user=request.user,amount_no=amount)
-                payment.save()
+        if(que['ResultCode'] == '0'):
+            payment = Payment(user=request.user, amount_no=amount)
+            payment.save()
 
-                return Response({'status': True, 'payload': que}, status.HTTP_200_OK)
-            else:
-                return Response({'status': False, 'payload': que}, status.HTTP_400_BAD_REQUEST)
+            return Response({'status': True, 'payload': que}, status.HTTP_200_OK)
+        else:
+            return Response({'status': False, 'payload': que}, status.HTTP_400_BAD_REQUEST)
 
-class stkQuery(APIView):
-    def stkQuery(request):
-        if request.method == 'POST':
-            m_time = mpesa_time()
-            p_key = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
-            m_pass = mpesa_password("174379", p_key, m_time)
-            token = mpesa_token()
 
-            body = request.body
-            body = json.loads(body)
-            transaction_id = body['id']
-            print(transaction_id)
-            res = stk_Query(transaction_id, m_pass,
-                            m_time, token['access_token'])
-            print(res)
-            return Response({'status': True, 'payload': res}, status.HTTP_200_OK)
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterSerializer

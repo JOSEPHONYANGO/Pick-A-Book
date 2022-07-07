@@ -20,7 +20,6 @@ from decouple import config,Csv
 import dj_database_url
 import cloudinary, cloudinary.api,cloudinary.uploader
 import os
-from django.conf import settings
 import django_on_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,11 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Book',
+    'drf_yasg',
     'bootstrap5',
     'cloudinary',
     'django_filters',
     'rest_framework',
-    'mpesa'
+    'rest_framework_swagger'
+    
 ]
 
 MIDDLEWARE = [
@@ -82,6 +83,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+             'libraries' : {
+                'staticfiles': 'django.templatetags.static', 
+            }
         },
     },
 ]
@@ -90,6 +94,8 @@ REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': [
 		'rest_framework_simplejwt.authentication.JWTAuthentication',
 	],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+
 }
 
 WSGI_APPLICATION = 'PickBook.wsgi.application'
