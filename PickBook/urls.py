@@ -27,5 +27,4 @@ urlpatterns = [
          jwt_views.TokenRefreshView.as_view(),
          name ='token_refresh'),
     path('',include('Book.urls'))
-    
 ]
