@@ -7,6 +7,6 @@ urlpatterns=[
     path('all_users/',views.all_users.as_view(),name='allusers'),
     path('all_categories/',views.all_categories.as_view(),name='allcategories'),
     path('payment/',views.BookPayment.as_view(),name='payment'),
-    path('query/',views.BookPayment.as_view(),name='query'),
+    path('register_user/',views.RegisterView.as_view(),name='register'),
 
 ]
