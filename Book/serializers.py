@@ -1,6 +1,6 @@
 from dataclasses import fields
 from rest_framework import serializers
-from .models import Books,Profile, Category,Cart
+from .models import Books,Profile, Category,Cart,Delivery
 from django.contrib.auth.models import User
 
 
@@ -37,4 +37,9 @@ class CartSerializer(serializers.ModelSerializer):
     books = BookSerializer(read_only=True,many=True)
     class Meta:
         model = Cart
-        fields = '__all__'       
+        fields = '__all__'  
+
+class DeliverySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Delivery
+        fields = ('order','user','delivery_status')

@@ -1,6 +1,6 @@
 from unicodedata import category
-from .models import Books, Category,Cart
-from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer,CartSerializer
+from .models import Books, Category,Cart,Delivery
+from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer,CartSerializer,DeliverySerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -82,5 +82,18 @@ class CartView (APIView):
             serializer = CartSerializer(cart, many=True)
 
             return Response(serializer.data)
+
+class DeliveryView(APIView):
+    permission_classes = (IsAuthenticated,) 
+
+    def get(self, request):
+        if request.method == 'GET':
+            delivery = Delivery.objects.all() 
+
+            serializer = DeliverySerializer(delivery, many=True) 
+
+            return Response(serializer.data)         
+
+
 
 
