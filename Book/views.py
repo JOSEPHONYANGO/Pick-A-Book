@@ -1,13 +1,9 @@
-
-from collections import UserString
-from pickle import NONE
-from unicodedata import category
-from Book.Mpesa import *
-from .models import Books, Category,Cart,Delivery, Payment
-from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer,CartSerializer,DeliverySerializer
-from django.conf import UserSettingsHolder
 from cmath import log
 from unicodedata import category
+
+from Book.Mpesa import *
+from .models import Books, Category, Payment
+from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer,RegisterSerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -76,46 +72,6 @@ class all_categories(APIView):
 
         serializer = CategorySerializer(category, many=True)
 
-
-            return Response(serializer.data)
-
-
-class CartView (APIView):
-    permission_classes = (IsAuthenticated, )
-
-    def get(self, request):
-        if request.method == 'GET':
-            cart = Cart.objects.all()
-
-            serializer = CartSerializer(cart, many=True)
-
-            return Response(serializer.data)
-
-class DeliveryView(APIView):
-    permission_classes = (IsAuthenticated,) 
-
-    def get(self, request):
-        if request.method == 'GET':
-            delivery = Delivery.objects.all() 
-
-            serializer = DeliverySerializer(delivery, many=True) 
-
-            return Response(serializer.data)        
- 
-
-class User(APIView):
-    def get(self,request,userid,format=None):
-        users = UserString.object.all().filter(users=userid)
-        serializer = UserSerializer(users,many=True)
-        return Response({"status":"Ok","data":serializer.data},status.HTTP_200_OK)
-    
-    def post(self,request,format=None,):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"status":"Ok","data":serializer.data},status.HTTP_200_OK)
-        else:
-            return Response({"status":False,"data":serializer.errors},status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data)
 
 
