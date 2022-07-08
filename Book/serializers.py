@@ -6,6 +6,7 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
 
+
 class BookSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
     user = serializers.StringRelatedField()

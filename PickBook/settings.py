@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'cloudinary',
     'django_filters',
     'rest_framework',
-    'rest_framework_swagger'
+    'rest_framework_swagger',
+    'corsheaders',
     
 ]
 
@@ -64,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     
 
 ]
@@ -100,7 +103,13 @@ REST_FRAMEWORK = {
 
 WSGI_APPLICATION = 'PickBook.wsgi.application'
 
+CORS_ORIGIN_ALLOW_ALL = False
 
+CORS_ORIGIN_WHITELIST = (
+
+       'http://localhost:4200',
+
+)
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -149,11 +158,11 @@ USE_I18N = True
 USE_TZ = True
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
-    # "http://127.0.0.1:9000", add heroku
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:4200",
+#     # "http://127.0.0.1:9000", add heroku
     # "http://127.0.0.1:9000", add githublin
-]
+# ]
 
 
 # Static files (CSS, JavaScript, Images)

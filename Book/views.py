@@ -13,8 +13,7 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
-# from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated,AllowAny
@@ -111,7 +110,6 @@ class stkQuery(APIView):
         return Response({'status': True, 'payload': res}, status.HTTP_200_OK)
 
 class RegisterView(generics.CreateAPIView):
-    User = get_user_model()
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer

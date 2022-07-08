@@ -49,6 +49,7 @@ class Books(models.Model):
     book_image = CloudinaryField("book_image",null=True,blank=True)
     category = models.ForeignKey(
         Category, related_name="filter", on_delete=models.CASCADE)
+    price =models.IntegerField(null=True, blank=True)
 
     def __str__(self) -> str:
         return self.title
