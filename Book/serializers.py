@@ -4,7 +4,6 @@ from .models import Books,Profile, Category
 from django.contrib.auth.models import User
 
 
-
 class BookSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
     user = serializers.StringRelatedField()

@@ -7,6 +7,4 @@ urlpatterns=[
     path('all_users/',views.all_users.as_view(),name='allusers'),
     path('all_categories/',views.all_categories.as_view(),name='allcategories'),
 
-
-
 ]
