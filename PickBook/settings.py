@@ -51,8 +51,9 @@ INSTALLED_APPS = [
     'cloudinary',
     'django_filters',
     'rest_framework',
+    'corsheaders',
     'rest_framework_swagger'
-    
+   
 ]
 
 MIDDLEWARE = [
@@ -193,3 +194,6 @@ SIMPLE_JWT = {
 }
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 django_on_heroku.settings(locals())
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
