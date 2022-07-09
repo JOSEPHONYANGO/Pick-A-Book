@@ -13,6 +13,9 @@ urlpatterns=[
     path('payment/',views.BookPayment.as_view(),name='payment'),
     path('register_user/',views.RegisterView.as_view(),name='register'),
     path('query/',views.stkQuery.as_view(),name='register'),
-    path('', schema_view)
+    path('', schema_view),
+    path("burgains/", views.BookBurgainAPIView.as_view(), name="burgains"),
+    path("burgains/<int:pk>/", views.BookBurgainUpdateDestroyAPIView.as_view(), name="burgain-details"),
+
 
 ]

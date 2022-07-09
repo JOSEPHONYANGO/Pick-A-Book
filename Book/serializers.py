@@ -4,7 +4,8 @@ from .models import Books,Profile, Category
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-
+from rest_framework import serializers
+from .models import Customer, Book, Burgain
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -70,3 +71,20 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = "__all__"
+
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = "__all__"
+
+
+class BurgainSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Burgain
+        fields = "__all__"
