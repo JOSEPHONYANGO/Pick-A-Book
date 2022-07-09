@@ -64,10 +64,26 @@ class all_users(APIView):
 
     def get(self, request):
         users = User.objects.all()
+        if 'username' in request.GET and request.GET['username']:
+            username = request.GET['username']
+            users = User.objects.filter(username=username)
+        else:
+            users = User.objects.all()
 
         serializer = UserSerializer(users, many=True)
 
         return Response(serializer.data)
+        #     def get(self, request):
+        # if request.method == 'GET':
+        #     if 'category' in request.GET and request.GET['category']:
+        #         category = request.GET['category']
+        #         books = Books.objects.filter(category__name=category)
+        #     else:
+        #         books = Books.objects.all()
+
+        #     serializer = BookSerializer(books, many=True)
+        #     return Response(serializer.data)
+
   
 
 
