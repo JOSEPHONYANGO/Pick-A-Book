@@ -1,5 +1,6 @@
+from logging import raiseExceptions
 from unicodedata import category
-from .models import Books, Category,Cart,Delivery
+from .models import Books, Category,Cart,Delivery,User
 from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer,CartSerializer,DeliverySerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -82,6 +83,14 @@ class CartView (APIView):
             serializer = CartSerializer(cart, many=True)
 
             return Response(serializer.data)
+   
+
+    def post(self, request):
+        serializer = CartSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)           
 
 class DeliveryView(APIView):
     permission_classes = (IsAuthenticated,) 
@@ -92,7 +101,23 @@ class DeliveryView(APIView):
 
             serializer = DeliverySerializer(delivery, many=True) 
 
-            return Response(serializer.data)         
+            return Response(serializer.data) 
+
+class RegisterAPIView(APIView):
+    def post(self,request):
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True) 
+        serializer.save
+        return Response(serializer.data)
+
+class LoginAPIView(APIView):
+    def post(self,request):
+        user = user.objects.filter(email=request.data['email']).first()
+        
+        # if not user
+        #     raiseAPIExceptions
+
+
 
 
 
