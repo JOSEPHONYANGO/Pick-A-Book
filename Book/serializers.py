@@ -4,7 +4,8 @@ from .models import Books,Profile, Category,Cart,Delivery
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-
+from rest_framework import serializers
+from .models import Customer, Book, Burgain
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -87,7 +88,26 @@ class CartSerializer(serializers.ModelSerializer):
 #         model=Cart
 #         fields ='__all__' 
 
+
 class DeliverySerializer(serializers.ModelSerializer):
     class Meta:
         model = Delivery
         fields = ('order','user','delivery_status')
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = "__all__"
+
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = "__all__"
+
+
+class BurgainSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Burgain
+        fields = "__all__"

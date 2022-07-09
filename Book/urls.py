@@ -15,6 +15,8 @@ urlpatterns=[
     path('query/',views.stkQuery.as_view(),name='register'),
     path('carts',views.CartView.as_view(),name='allcarts'),
     path('delivery',views.DeliveryView.as_view(),name='alldeliveries'),
-    path('', schema_view)
+    path('', schema_view),
+    path("burgains/", views.BookBurgainAPIView.as_view(), name="burgains"),
+    path("burgains/<int:pk>/", views.BookBurgainUpdateDestroyAPIView.as_view(), name="burgain-details"),
 
 ]
