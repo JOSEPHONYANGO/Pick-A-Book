@@ -114,9 +114,7 @@ class LoginAPIView(APIView):
     def post(self,request):
         user = user.objects.filter(email=request.data['email']).first()
         
-        # if not user
-        #     raiseAPIExceptions
-
+        
 
 
 
