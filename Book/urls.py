@@ -13,6 +13,8 @@ urlpatterns=[
     path('payment/',views.BookPayment.as_view(),name='payment'),
     path('register_user/',views.RegisterView.as_view(),name='register'),
     path('query/',views.stkQuery.as_view(),name='register'),
+    path('carts',views.CartView.as_view(),name='allcarts'),
+    path('delivery',views.DeliveryView.as_view(),name='alldeliveries'),
     path('', schema_view)
 
 ]

@@ -2,8 +2,8 @@ from cmath import log
 from unicodedata import category
 
 from Book.Mpesa import *
-from .models import Books, Category, Payment
-from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CategorySerializer,RegisterSerializer
+from .models import Books, Category, Payment,Cart,Delivery
+from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CartSerializer,RegisterSerializer, CategorySerializer,DeliverySerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -113,3 +113,38 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
+
+
+
+class CartView (APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request):
+        if request.method == 'GET':
+            cart = Cart.objects.all()
+
+            serializer = CartSerializer(cart, many=True)
+
+            return Response(serializer.data)
+
+
+    # def post(self, request):
+
+    #     serializer = PostCartSerializer(data=request.data)
+
+    #     if serializer.is_valid():
+    #         serializer.save()
+
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class DeliveryView(APIView):
+    permission_classes = (IsAuthenticated,) 
+
+    def get(self, request):
+        if request.method == 'GET':
+            delivery = Delivery.objects.all() 
+
+            serializer = DeliverySerializer(delivery, many=True) 
+
+            return Response(serializer.data)   

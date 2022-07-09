@@ -1,6 +1,6 @@
 from dataclasses import fields
 from rest_framework import serializers
-from .models import Books,Profile, Category
+from .models import Books,Profile, Category,Cart,Delivery
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
@@ -70,3 +70,24 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class CartSerializer(serializers.ModelSerializer):
+    books = BookSerializer(read_only=True,many=True)
+
+    class Meta:
+        model = Cart
+        fields = '__all__' 
+
+
+# class PostCartSerializer(serializers.ModelSerializer):
+#     books = serializers.PrimaryKeyRelatedField(queryset=Books.objects.all(),many=False)
+#     cart_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),many=False)
+#     class Meta:
+#         model=Cart
+#         fields ='__all__' 
+
+class DeliverySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Delivery
+        fields = ('order','user','delivery_status')
