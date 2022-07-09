@@ -44,7 +44,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
-<<<<<<< HEAD
         model = Delivery
         fields = ('order','user','delivery_status')
 
@@ -64,7 +63,6 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
             instance.save()
             return instance  
-=======
         model = User
         fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name')
         extra_kwargs = {
@@ -91,4 +89,3 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
->>>>>>> 69688837fed0782b5738c853edc34b309521f420
