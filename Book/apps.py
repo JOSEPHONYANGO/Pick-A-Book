@@ -7,3 +7,4 @@ class BookConfig(AppConfig):
 
     def ready(self):
         import Book.signals
+        
