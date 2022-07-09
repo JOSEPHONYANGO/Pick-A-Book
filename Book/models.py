@@ -173,7 +173,6 @@ class AbstractBaseModel(models.Model):
 
 class Book(AbstractBaseModel):
     title = models.CharField(max_length=255)
-    year_published = models.CharField(max_length=4)
     publisher = models.CharField(max_length=200)
     category = models.CharField(max_length=255, null=True, blank=True)
     price = models.FloatField(default=0)
