@@ -11,11 +11,6 @@ admin.site.register(Cart)
 admin.site.register(Orders)
 admin.site.register(Delivery)
 admin.site.register(Payment)
-
-
-
-admin.site.register(Cart)
-admin.site.register(Delivery)
 admin.site.register(Book)
 admin.site.register(Burgain)
 admin.site.register(Customer)
