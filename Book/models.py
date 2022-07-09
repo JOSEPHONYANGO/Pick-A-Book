@@ -149,3 +149,53 @@ class Payment(models.Model):
     amount_no = models.IntegerField()
     order = models.OneToOneField(
         Orders, related_name='payment_order', on_delete=models.CASCADE,null=True,blank=True)
+
+
+class Cart(models.Model):
+    cart_id = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    book = models.ForeignKey(
+        Books, related_name='cart_books', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, related_name='cart_user', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['cart_id','created_at'] 
+
+    def __str__(self):
+        return f'{self.cart_id}'        
+class AbstractBaseModel(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+class Book(AbstractBaseModel):
+    title = models.CharField(max_length=255)
+    publisher = models.CharField(max_length=200)
+    category = models.CharField(max_length=255, null=True, blank=True)
+    price = models.FloatField(default=0)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.title
+
+
+class Customer(AbstractBaseModel):
+    name = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.name
+
+
+class Burgain(AbstractBaseModel):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    your_price = models.FloatField(default=0)
+    is_approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.customer.name} burgained {self.book.title} to {str(self.your_price)}"
