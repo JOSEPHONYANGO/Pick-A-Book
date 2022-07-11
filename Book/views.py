@@ -137,37 +137,39 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
-class ListCart(generics.CreateAPIView):
-    permission_classes = (IsAuthenticated,)  
-    queryset = Cart.objects.all()  
-    serializer_class = CartSerializer
+# class ListCart(generics.CreateAPIView):
+#     permission_classes = (IsAuthenticated,)  
+#     queryset = Cart.objects.all()  
+#     serializer_class = CartSerializer
 
-class DetailCart(generics.RetrieveUpdateDestroyAPIView): 
-    permission_classes = (IsAuthenticated,)  
-    queryset = Cart.objects.all()  
-    serializer_class = CartSerializer   
-
-
-# class CartView (APIView):
-#     permission_classes = (IsAuthenticated, )
-
-#     def get(self, request):
-#         if request.method == 'GET':
-#             cart = Cart.objects.all()
-
-#             serializer = CartSerializer(cart, many=True)
-
-#             return Response(serializer.data)
+# class DetailCart(generics.RetrieveUpdateDestroyAPIView): 
+#     permission_classes = (IsAuthenticated,)  
+#     queryset = Cart.objects.all()  
+#     serializer_class = CartSerializer   
 
 
-#     def post(self, request):
+class CartView (APIView):
+    permission_classes = (IsAuthenticated, )
 
-#         serializer = CartSerializer(data=request.data)
+    def get(self, request):
+        if request.method == 'GET':
+            cart = Cart.objects.all()
+            serializer = CartSerializer(cart, many=True)
+            return Response(serializer.data)
 
-#         if serializer.is_valid():
-#             serializer.save()
 
-#             return Response(serializer.data)
+    
+    def post(self, request):
+        if request.method == 'POST':
+            serializer = CartSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+        else:
+            return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
 
 
 class DeliveryView(APIView):

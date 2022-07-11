@@ -154,7 +154,7 @@ class Payment(models.Model):
 class Cart(models.Model):
     cart_id = models.OneToOneField(User,on_delete=models.CASCADE,null=False,blank=True,primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True)
-    books = models.ManyToManyField(Books)
+    books = models.ForeignKey(Books,on_delete=models.CASCADE,null=True)
     user = models.ForeignKey(User, related_name='cart_user', on_delete=models.CASCADE)
 
     class Meta:
