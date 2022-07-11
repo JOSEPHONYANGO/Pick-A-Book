@@ -8,7 +8,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
-from .serializers import BookSerializer
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.response import Response
