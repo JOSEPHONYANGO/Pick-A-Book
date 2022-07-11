@@ -137,6 +137,16 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
+class ListCart(generics.CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)  
+    queryset = Cart.objects.all()  
+    serializer_class = CartSerializer
+
+class DetailCart(generics.RetrieveUpdateDestroyAPIView): 
+    permission_classes = (permissions.IsAuthenticated,)  
+    queryset = Cart.objects.all()  
+    serializer_class = CartSerializer   
+
 
 class CartView (APIView):
     permission_classes = (IsAuthenticated, )
@@ -157,7 +167,7 @@ class CartView (APIView):
         if serializer.is_valid():
             serializer.save()
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data)
 
 
 class DeliveryView(APIView):

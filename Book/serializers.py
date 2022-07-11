@@ -46,7 +46,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Delivery
-        fields = ('order','user','delivery_status')
+        fields = ('order','user','delivery_status','email','password','password2')
 
 
 class UserSerializer(serializers.ModelSerializer):
