@@ -137,27 +137,37 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
+class ListCart(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)  
+    queryset = Cart.objects.all()  
+    serializer_class = CartSerializer
 
-class CartView (APIView):
-    permission_classes = (IsAuthenticated, )
-
-    def get(self, request):
-        if request.method == 'GET':
-            cart = Cart.objects.all()
-
-            serializer = CartSerializer(cart, many=True)
-
-            return Response(serializer.data)
+class DetailCart(generics.RetrieveUpdateDestroyAPIView): 
+    permission_classes = (IsAuthenticated,)  
+    queryset = Cart.objects.all()  
+    serializer_class = CartSerializer   
 
 
-    # def post(self, request):
+# class CartView (APIView):
+#     permission_classes = (IsAuthenticated, )
 
-    #     serializer = PostCartSerializer(data=request.data)
+#     def get(self, request):
+#         if request.method == 'GET':
+#             cart = Cart.objects.all()
 
-    #     if serializer.is_valid():
-    #         serializer.save()
+#             serializer = CartSerializer(cart, many=True)
 
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#             return Response(serializer.data)
+
+
+#     def post(self, request):
+
+#         serializer = CartSerializer(data=request.data)
+
+#         if serializer.is_valid():
+#             serializer.save()
+
+#             return Response(serializer.data)
 
 
 class DeliveryView(APIView):
