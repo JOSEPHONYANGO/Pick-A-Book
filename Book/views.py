@@ -1,6 +1,6 @@
 from cmath import log
 from unicodedata import category
-
+import json
 from Book.Mpesa import *
 from .models import Books, Category, Payment,Cart,Delivery
 from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CartSerializer,RegisterSerializer, CategorySerializer,DeliverySerializer
@@ -160,14 +160,21 @@ class CartView (APIView):
 
     
     def post(self, request):
-        if request.method == 'POST':
-            serializer = CartSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
-        else:
-            return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        data=json.loads(request.body)
+        book = Books.objects.get(pk=data['book'])
+        user = User.objects.get(pk=data['user'])
+        cart = Cart(book=book,user=user)
+        cart.save()
+        
+        
+    #     serializer = CartSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()            
+    #         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+    #     else:
+    #         return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
+
 
 
 

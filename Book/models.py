@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
+
 class Category(models.Model):
     """
     Contains the different book categories e.g memoir, poetry
@@ -105,6 +106,7 @@ class Orders(models.Model):
     is_delivered = models.BooleanField(default=False)
 
 
+
 class MakeOffer(models.Model):
     book = models.ForeignKey(
         Books, on_delete=models.CASCADE, related_name='offers')
@@ -136,11 +138,11 @@ class Delivery(models.Model):
     )
 
 
-# class Cart(models.Model):
-#     book = models.ForeignKey(
-#         Books, related_name='cart_books', on_delete=models.CASCADE)
-#     user = models.ForeignKey(
-#         User, related_name='cart_user', on_delete=models.CASCADE)
+class Cart(models.Model):
+    book = models.ForeignKey(
+        Books, related_name='cart_books', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, related_name='cart_user', on_delete=models.CASCADE)
 
 
 class Payment(models.Model):
@@ -151,17 +153,17 @@ class Payment(models.Model):
         Orders, related_name='payment_order', on_delete=models.CASCADE,null=True,blank=True)
 
 
-class Cart(models.Model):
-    cart_id = models.OneToOneField(User,on_delete=models.CASCADE,null=False,blank=True,primary_key=True)
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    books = models.ForeignKey(Books,on_delete=models.CASCADE,null=True)
-    user = models.ForeignKey(User, related_name='cart_user', on_delete=models.CASCADE)
+# class Cart(models.Model):
+    # cart_id = models.OneToOneField(User,on_delete=models.CASCADE,null=False,blank=True,primary_key=True)
+    # created_at = models.DateTimeField(auto_now_add=True,null=True)
+    # book = models.ForeignKey(Books,on_delete=models.CASCADE,null=True)
+    # user = models.ForeignKey(User, related_name='cart_user', on_delete=models.CASCADE)
 
-    class Meta:
-        ordering = ['cart_id','created_at'] 
+    # class Meta:
+    #     ordering = ['created_at'] 
 
-    def __str__(self):
-        return f'{self.cart_id}'        
+    # def __str__(self):
+    #     return f'{self.created_at}'        
 class AbstractBaseModel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
