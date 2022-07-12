@@ -101,10 +101,10 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class BookSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Book
-        fields = "__all__"
+# class BookSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Book
+#         fields = "__all__"
 
 
 class BurgainSerializer(serializers.ModelSerializer):
