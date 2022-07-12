@@ -46,6 +46,19 @@ class all_books(APIView):
             serializer = BookSerializer(books, many=True)
             return Response(serializer.data)
 
+class book_details(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request):
+        if request.method == 'GET':
+            if 'book' in request.GET and request.GET['book']:
+                book = request.GET['book']
+                books = Books.objects.filter(id=book)
+            else:
+                books = Books.objects.all()
+
+            serializer = BookSerializer(books, many=True)
+            return Response(serializer.data)
 
 class create_books(APIView):
     permission_classes = (IsAuthenticated, )
