@@ -46,6 +46,19 @@ class all_books(APIView):
             serializer = BookSerializer(books, many=True)
             return Response(serializer.data)
 
+class book_details(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request):
+        if request.method == 'GET':
+            if 'book' in request.GET and request.GET['book']:
+                book = request.GET['book']
+                books = Books.objects.filter(id=book)
+            else:
+                books = Books.objects.all()
+
+            serializer = BookSerializer(books, many=True)
+            return Response(serializer.data)
 
 class create_books(APIView):
     permission_classes = (IsAuthenticated, )
@@ -137,46 +150,27 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
-# class ListCart(generics.CreateAPIView):
-#     permission_classes = (IsAuthenticated,)  
-#     queryset = Cart.objects.all()  
-#     serializer_class = CartSerializer
-
-# class DetailCart(generics.RetrieveUpdateDestroyAPIView): 
-#     permission_classes = (IsAuthenticated,)  
-#     queryset = Cart.objects.all()  
-#     serializer_class = CartSerializer   
-
 
 class CartView (APIView):
-    # permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         if request.method == 'GET':
             cart = Cart.objects.all()
+
             serializer = CartSerializer(cart, many=True)
+
             return Response(serializer.data)
 
 
-    
-    def post(self, request):
-        data=json.loads(request.body)
-        books = Books.objects.get(pk=data['books'])
-        user = User.objects.get(pk=data['user'])
-        cart = Cart(books=books,user=user)
-        cart.save()
-        
-        
-    #     serializer = CartSerializer(data=request.data)
+    # def post(self, request):
+
+    #     serializer = PostCartSerializer(data=request.data)
+
     #     if serializer.is_valid():
-    #         serializer.save()            
-    #         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
-    #     else:
-    #         return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    
+    #         serializer.save()
 
-
-
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class DeliveryView(APIView):
