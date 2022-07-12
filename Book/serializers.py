@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from .models import Customer, Book, Burgain
+from .models import Customer, Books, Burgain
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -122,7 +122,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Book
+        model = Books
         fields = "__all__"
 
 

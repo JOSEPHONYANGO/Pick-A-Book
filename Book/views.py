@@ -149,7 +149,7 @@ class RegisterView(generics.CreateAPIView):
 
 
 class CartView (APIView):
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         if request.method == 'GET':
@@ -161,9 +161,9 @@ class CartView (APIView):
     
     def post(self, request):
         data=json.loads(request.body)
-        book = Books.objects.get(pk=data['book'])
+        books = Books.objects.get(pk=data['books'])
         user = User.objects.get(pk=data['user'])
-        cart = Cart(book=book,user=user)
+        cart = Cart(books=books,user=user)
         cart.save()
         
         
