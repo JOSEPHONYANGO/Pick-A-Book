@@ -52,7 +52,8 @@ class Books(models.Model):
     price =models.IntegerField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.title
+        return '%d: %s '%(self.price, self.title)
+
 
     @classmethod
     def save_books(cls, books):
@@ -151,7 +152,10 @@ class Cart(models.Model):
     user = models.ForeignKey(
         User, related_name='cart_user', on_delete=models.CASCADE)
     quantity=models.IntegerField()
-  
+    @property
+    def get_images(self):
+        return self.cart_books.all()
+
 class AbstractBaseModel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

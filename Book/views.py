@@ -174,6 +174,23 @@ class CartView (APIView):
             serializer.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    def delete(self,request):
+        if request.method == 'DELETE':
+
+            if 'cart' in request.GET and request.GET['cart']:
+                cart = request.GET['cart']
+                cart = Cart.objects.filter(id=cart)
+                print(cart)
+                cart.delete()
+        return Response({"message":'item was deleted '})
+
+class EmptyCart(APIView):
+    permission_classes = (IsAuthenticated,)
+    def delete(Self,request):
+        if request.method == 'DELETE':
+            Cart.objects.all().delete()
+        return Response({"message":'item was deleted '})
 
 
 class DeliveryView(APIView):
@@ -186,6 +203,7 @@ class DeliveryView(APIView):
             serializer = DeliverySerializer(delivery, many=True) 
 
             return Response(serializer.data)   
+    
 
 class BookBurgainAPIView(generics.ListCreateAPIView):
     queryset = Burgain.objects.all()
