@@ -3,7 +3,7 @@ from unicodedata import category
 
 from Book.Mpesa import *
 from .models import Books, Category, Payment,Cart,Delivery
-from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CartSerializer,RegisterSerializer, CategorySerializer,DeliverySerializer
+from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CartSerializer,RegisterSerializer, CategorySerializer,DeliverySerializer,PostCartSerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -156,21 +156,24 @@ class CartView (APIView):
 
     def get(self, request):
         if request.method == 'GET':
-            cart = Cart.objects.all()
+            if 'user' in request.GET and request.GET['user']:
+                user = request.GET['user']
+                cart = Cart.objects.filter(user__id=user)
+            else:
+                cart = Cart.objects.all()
 
             serializer = CartSerializer(cart, many=True)
-
             return Response(serializer.data)
 
 
-    # def post(self, request):
+    def post(self, request):
 
-    #     serializer = PostCartSerializer(data=request.data)
+        serializer = PostCartSerializer(data=request.data)
 
-    #     if serializer.is_valid():
-    #         serializer.save()
+        if serializer.is_valid():
+            serializer.save()
 
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class DeliveryView(APIView):
