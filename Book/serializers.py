@@ -74,19 +74,20 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
-    books = BookSerializer(read_only=True,many=True)
-
+    book = BookSerializer(read_only=True)
+    user = serializers.StringRelatedField()
     class Meta:
         model = Cart
-        fields = '__all__' 
+        fields = '__all__'
 
 
-# class PostCartSerializer(serializers.ModelSerializer):
-#     books = serializers.PrimaryKeyRelatedField(queryset=Books.objects.all(),many=False)
-#     cart_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),many=False)
-#     class Meta:
-#         model=Cart
-#         fields ='__all__' 
+class PostCartSerializer(serializers.ModelSerializer):
+    book = serializers.PrimaryKeyRelatedField(queryset=Books.objects.all(),many=False)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),many=False)
+
+    class Meta:
+        model=Cart
+        fields ='__all__' 
 
 
 class DeliverySerializer(serializers.ModelSerializer):
