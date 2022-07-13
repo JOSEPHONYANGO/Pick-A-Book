@@ -1,11 +1,11 @@
 from dataclasses import fields
 from rest_framework import serializers
-from .models import Books,Profile, Category,Cart,Delivery
+from .models import Book,Profile, Category,Cart,Delivery
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from .models import Customer, Books, Burgain
+from .models import Customer, Book, Burgain
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class BookSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
 
     class Meta:
-        model=Books
+        model=Book
         fields = '__all__'
         
 class PostBookSerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class PostBookSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),many=False)
 
     class Meta:
-        model=Books
+        model=Book
         fields ='__all__'
 
 class UserSerializer(serializers.ModelSerializer):
@@ -103,7 +103,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Books
+        model = Book
         fields = "__all__"
 # class BookSerializer(serializers.ModelSerializer):
 #     class Meta:

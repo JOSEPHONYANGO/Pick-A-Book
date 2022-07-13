@@ -2,7 +2,7 @@ from cmath import log
 from unicodedata import category
 import json
 from Book.Mpesa import *
-from .models import Books, Category, Payment,Cart,Delivery
+from .models import Book, Category, Payment,Cart,Delivery
 from .serializers import BookSerializer, PostBookSerializer, UserSerializer, CartSerializer,RegisterSerializer, CategorySerializer,DeliverySerializer
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -39,9 +39,9 @@ class all_books(APIView):
         if request.method == 'GET':
             if 'category' in request.GET and request.GET['category']:
                 category = request.GET['category']
-                books = Books.objects.filter(category__name=category)
+                books = Book.objects.filter(category__name=category)
             else:
-                books = Books.objects.all()
+                books = Book.objects.all()
 
             serializer = BookSerializer(books, many=True)
             return Response(serializer.data)
@@ -53,9 +53,9 @@ class book_details(APIView):
         if request.method == 'GET':
             if 'book' in request.GET and request.GET['book']:
                 book = request.GET['book']
-                books = Books.objects.filter(id=book)
+                books = Book.objects.filter(id=book)
             else:
-                books = Books.objects.all()
+                books = Book.objects.all()
 
             serializer = BookSerializer(books, many=True)
             return Response(serializer.data)
@@ -86,17 +86,7 @@ class all_users(APIView):
         serializer = UserSerializer(users, many=True)
 
         return Response(serializer.data)
-        #     def get(self, request):
-        # if request.method == 'GET':
-        #     if 'category' in request.GET and request.GET['category']:
-        #         category = request.GET['category']
-        #         books = Books.objects.filter(category__name=category)
-        #     else:
-        #         books = Books.objects.all()
-
-        #     serializer = BookSerializer(books, many=True)
-        #     return Response(serializer.data)
-
+        
   
 
 
@@ -152,25 +142,20 @@ class RegisterView(generics.CreateAPIView):
 
 
 class CartView (APIView):
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
 
     def get(self, request):
-        if request.method == 'GET':
-            cart = Cart.objects.all()
+        cart = Cart.objects.all()
+        serializer = CartSerializer(cart, many=True)
+        return Response(serializer.data,status.HTTP_200_OK)
 
-            serializer = CartSerializer(cart, many=True)
-
-            return Response(serializer.data)
-
-
-    # def post(self, request):
-
-    #     serializer = PostCartSerializer(data=request.data)
-
-    #     if serializer.is_valid():
-    #         serializer.save()
-
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def post(self,request):
+        data = request.data 
+        serializer = CartSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DeliveryView(APIView):

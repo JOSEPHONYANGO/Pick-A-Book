@@ -35,6 +35,7 @@ class Category(models.Model):
         self.update(name=name)
 
 
+
 class Books(models.Model):
     """
     model that holds books and their associated information
@@ -51,6 +52,8 @@ class Books(models.Model):
     category = models.ForeignKey(
         Category, related_name="filter", on_delete=models.CASCADE)
     price =models.IntegerField(null=True, blank=True)
+
+    
 
     def __str__(self) -> str:
         return self.title
@@ -98,7 +101,6 @@ class Profile(models.Model):
     def delete_profile(cls, profile):
         cls.delete(profile)
 
-
 class Orders(models.Model):
     book = models.ForeignKey(
         Books, related_name="order_book", on_delete=models.CASCADE)
@@ -139,10 +141,18 @@ class Delivery(models.Model):
 
 
 class Cart(models.Model):
+    cart_id = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
     book = models.ForeignKey(
         Books, related_name='cart_books', on_delete=models.CASCADE)
     user = models.ForeignKey(
         User, related_name='cart_user', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['cart_id','created_at'] 
+
+    def __str__(self):
+        return f'{self.cart_id}'
 
 
 class Payment(models.Model):
@@ -161,15 +171,16 @@ class AbstractBaseModel(models.Model):
     class Meta:
         abstract = True
 
-# class Book(AbstractBaseModel):
-#     title = models.CharField(max_length=255)
-#     publisher = models.CharField(max_length=200)
-#     category = models.CharField(max_length=255, null=True, blank=True)
-#     price = models.FloatField(default=0)
-#     description = models.TextField()
+class Book(AbstractBaseModel):
+    title = models.CharField(max_length=255)
+    publisher = models.CharField(max_length=200)
+    category = models.CharField(max_length=255, null=True, blank=True)
+    price = models.FloatField(default=0)
+    description = models.TextField()
+    cart_id = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
 
-#     def __str__(self):
-#         return self.title
+    def __str__(self):
+        return self.title
 
 
 class Customer(AbstractBaseModel):
@@ -182,7 +193,7 @@ class Customer(AbstractBaseModel):
 
 
 class Burgain(AbstractBaseModel):
-    books = models.ForeignKey(Books, on_delete=models.CASCADE)
+    books = models.ForeignKey(Book, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     your_price = models.FloatField(default=0)
     is_approved = models.BooleanField(default=False)
