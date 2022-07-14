@@ -52,7 +52,8 @@ class Books(models.Model):
     price =models.IntegerField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.title
+        return '%d: %s '%(self.price, self.title)
+
 
     @classmethod
     def save_books(cls, books):
@@ -136,13 +137,6 @@ class Delivery(models.Model):
     )
 
 
-class Cart(models.Model):
-    book = models.ForeignKey(
-        Books, related_name='cart_books', on_delete=models.CASCADE)
-    user = models.ForeignKey(
-        User, related_name='cart_user', on_delete=models.CASCADE)
-
-
 class Payment(models.Model):
     user = models.ForeignKey(
         User, related_name='user_payment', on_delete=models.CASCADE)
@@ -152,18 +146,16 @@ class Payment(models.Model):
 
 
 class Cart(models.Model):
-    cart_id = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True)
     book = models.ForeignKey(
         Books, related_name='cart_books', on_delete=models.CASCADE)
     user = models.ForeignKey(
         User, related_name='cart_user', on_delete=models.CASCADE)
+    quantity=models.IntegerField()
+    @property
+    def get_images(self):
+        return self.cart_books.all()
 
-    class Meta:
-        ordering = ['cart_id','created_at'] 
-
-    def __str__(self):
-        return f'{self.cart_id}'        
 class AbstractBaseModel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
