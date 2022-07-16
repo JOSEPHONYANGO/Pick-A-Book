@@ -148,7 +148,7 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
-    print("Hello")
+   
 
 
 class CartView (APIView):
